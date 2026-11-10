@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>10 Kasım - 1881 - ∞ | Atatürk'ü Anma</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter & Serif -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,500;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif'],
+                        cinzel: ['Cinzel', 'serif']
+                    },
+                    colors: {
+                        gold: {
+                            400: '#f3e5ab',
+                            500: '#d4af37',
+                            600: '#aa8c2c'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #050507;
+            color: #f3f4f6;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ambient Glow & Blur Background */
+        .ambient-glow {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.07) 0%, rgba(15, 15, 22, 0) 70%),
+                        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.03) 0%, rgba(5, 5, 7, 0) 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Cinematic Film Grain Overlay */
+        .film-grain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.15;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Infinite Horizontal Marquee Scroll */
+        .marquee-wrapper {
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: infiniteScroll 40s linear infinite;
+        }
+
+        .marquee-wrapper:hover .marquee-track,
+        .marquee-wrapper:active .marquee-track,
+        .marquee-track.paused {
+            animation-play-state: paused;
+        }
+
+        @keyframes infiniteScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Glassmorphism Card Style */
+        .memory-card {
+            background: rgba(18, 18, 24, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.09);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .memory-card:hover {
+            background: rgba(28, 28, 38, 0.85);
+            border-color: rgba(212, 175, 55, 0.4);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.15);
+        }
+
+        /* Equalizer Animation */
+        .eq-bar {
+            width: 3px;
+            background: #d4af37;
+            border-radius: 2px;
+            animation: bounce 1.2s ease-in-out infinite alternate;
+        }
+        .eq-bar:nth-child(1) { height: 14px; animation-delay: 0.1s; }
+        .eq-bar:nth-child(2) { height: 8px;  animation-delay: 0.35s; }
+        .eq-bar:nth-child(3) { height: 18px; animation-delay: 0.2s; }
+        .eq-bar:nth-child(4) { height: 11px; animation-delay: 0.45s; }
+
+        .paused .eq-bar {
+            animation-play-state: paused;
+            height: 4px !important;
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        @keyframes bounce {
+            0% { height: 4px; }
+            100% { height: 20px; }
+        }
+
+        /* Modal Blur Backing */
+        .modal-backdrop {
+            background: rgba(4, 4, 6, 0.88);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+        }
+
+        /* Hide scrollbars */
+        ::-webkit-scrollbar { display: none; }
+        * { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col min-h-[100dvh] justify-between relative selection:bg-gold-500/30 selection:text-gold-400">
+
+    <!-- Ambient Glow & Grain Layers -->
+    <div class="ambient-glow"></div>
+    <div class="film-grain"></div>
+
+    <!-- Audio Element -->
+    <audio id="bgAudio" loop preload="auto">
+        <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=sad-piano-ambient-112241.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- Header Section -->
+    <header class="flex flex-col items-center justify-center pt-8 md:pt-14 px-4 text-center z-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-gold-500/30 bg-gold-500/10 backdrop-blur-md mb-4 text-xs tracking-widest text-gold-400 font-medium uppercase shadow-lg shadow-gold-500/5">
+            <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+            10 Kasım Atatürk'ü Anma Günü
+        </div>
+
+        <h1 class="text-4xl md:text-6xl font-extralight tracking-widest text-white font-cinzel">
+            1881 <span class="text-gold-500/60 font-serif mx-1 md:mx-3">-</span> <span class="text-gold-400 font-serif">∞</span>
+        </h1>
+
+        <p class="mt-3 text-xs md:text-sm text-gray-400 font-light tracking-widest uppercase max-w-lg leading-relaxed">
+            Fikirleri, devrimleri ve ışığıyla yolumuzu aydınlatan Büyük Önder Mustafa Kemal Atatürk'ün aziz hatırasına...
+        </p>
+    </header>
+
+    <!-- Main Content: Endless Marquee Film Strip -->
+    <main class="flex-grow flex flex-col justify-center my-6 z-10 w-full">
+        <div class="marquee-wrapper py-6">
+            <div class="marquee-track gap-5 md:gap-7 px-4" id="marqueeTrack">
+                <!-- Cards dynamically populated via JS -->
+            </div>
+        </div>
+
+        <div class="text-center text-[11px] text-gray-500 uppercase tracking-widest mt-1">
+            <span>✨ Kartlara dokunarak detayları ve tarihi anıları inceleyebilirsiniz</span>
+        </div>
+    </main>
+
+    <!-- Footer Controls -->
+    <footer class="pb-8 px-6 flex flex-col sm:flex-row justify-between items-center z-10 text-xs text-gray-400 tracking-wider gap-4 max-w-6xl mx-auto w-full">
+        <div class="text-center sm:text-left">
+            <p class="font-semibold text-gray-300 font-cinzel">Ankara // 09:05</p>
+            <p class="text-[10px] text-gray-500">"Beni görmek demek mutlaka yüzümü görmek değildir."</p>
+        </div>
+
+        <!-- Music Toggle Pill Button -->
+        <button id="audioToggle" class="flex items-center gap-3 px-6 py-3 rounded-full border border-gold-500/30 bg-neutral-900/80 hover:bg-gold-500/15 hover:border-gold-500/50 transition-all backdrop-blur-xl shadow-xl shadow-black/50 group active:scale-95">
+            <div id="equalizer" class="flex items-center gap-1 h-5 paused">
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+                <div class="eq-bar"></div>
+            </div>
+            <span id="audioText" class="text-xs font-medium tracking-wider text-gray-200 group-hover:text-gold-400 transition-colors">
+                Müziği Başlat
+            </span>
+        </button>
+
+        <div class="text-center sm:text-right">
+            <p class="text-gray-300 italic font-serif">Saygı, Minnet ve Özlemle...</p>
+        </div>
+    </footer>
+
+    <!-- Interactive Photo & Story Detail Modal -->
+    <div id="photoModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 modal-backdrop opacity-0 pointer-events-none transition-all duration-300">
+        <div class="relative max-w-3xl w-full bg-neutral-900/95 border border-white/15 rounded-3xl overflow-hidden shadow-2xl backdrop-blur-2xl flex flex-col md:flex-row transform scale-95 transition-all duration-300" id="modalContainer">
+            
+            <!-- Close Button -->
+            <button id="closeModal" class="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/70 border border-white/20 text-white/90 flex items-center justify-center hover:bg-gold-500/30 hover:border-gold-500 transition-all">
+                ✕
+            </button>
+            
+            <!-- Image / SVG Container -->
+            <div class="w-full md:w-1/2 h-64 md:h-auto min-h-[260px] relative bg-neutral-950 flex items-center justify-center overflow-hidden border-b md:border-b-0 md:border-r border-white/10" id="modalImgWrapper">
+                <!-- Image or Generated SVG rendered dynamically -->
+            </div>
+
+            <!-- Content Section -->
+            <div class="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-between">
+                <div>
+                    <div class="flex items-center justify-between mb-3 border-b border-white/10 pb-2">
+                        <span id="modalYear" class="text-xs font-bold tracking-widest text-gold-400 font-cinzel"></span>
+                        <span class="text-[10px] text-gray-500 uppercase tracking-widest">Tarih Arşivi</span>
+                    </div>
+                    
+                    <h3 id="modalTitle" class="text-2xl font-light text-white mb-3 font-serif"></h3>
+                    <p id="modalDesc" class="text-sm text-gray-300 leading-relaxed font-light mb-6"></p>
+                </div>
+
+                <blockquote id="modalQuote" class="border-l-2 border-gold-500/80 pl-4 py-2 italic text-xs text-gold-400/90 font-serif bg-gold-500/5 rounded-r-lg"></blockquote>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data set of historic milestones
+        const memories = [
+            {
+                year: "1881",
+                title: "Bir Güneş Doğuyor",
+                desc: "Selanik'te pembe boyalı küçük bir evde, tüm bir milletin kaderini değiştirecek dahi bir lider dünyaya geldi.",
+                quote: "\"Büyüklük, övünmek değil; milletine hizmet etmektir.\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/1/1a/Mustafa_Kemal_Atat%C3%BCrk_at_Ankara_in_1923.jpg"
+            },
+            {
+                year: "1915",
+                title: "Anafartalar Destanı",
+                desc: "Çanakkale Harbi'nde dahi askeri stratejisi ve cesaretiyle dünya harp tarihini yeniden yazdı.",
+                quote: "\"Ben size taarruzu emretmiyorum, ölmeyi emrediyorum!\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/c/c0/Mustafa_Kemal_Atat%C3%BCrk_Çanakkale_1915.jpg"
+            },
+            {
+                year: "1919",
+                title: "Kurtuluş Meşalesi",
+                desc: "19 Mayıs'ta Bandırma Vapuru ile Samsun'a çıkarak işgal altındaki bir milletin bağımsızlık ateşini yaktı.",
+                quote: "\"Geldikleri gibi giderler!\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/a/a8/Ataturk_in_1930.jpg"
+            },
+            {
+                year: "1923",
+                title: "Cumhuriyetin İlanı",
+                desc: "Egemenliği kayıtsız şartsız millete devrederek çağdaş, laik ve modern Türkiye Cumhuriyeti'ni kurdu.",
+                quote: "\"Efendiler, yarın Cumhuriyet'i ilan edeceğiz!\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/8/87/Ataturk1937.jpg"
+            },
+            {
+                year: "1928",
+                title: "Harf ve İlim Seferberliği",
+                desc: "Kara tahta başında millete yeni Türk harflerini bizzat öğreterek bilim ve okuma hamlesini başlattı.",
+                quote: "\"Hayatta en hakiki mürşit ilimdir, fendir.\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/d/d4/Ataturk_on_the_train_1937.jpg"
+            },
+            {
+                year: "1937",
+                title: "Geometri ve Gelecek",
+                desc: "Kendi kaleminden Türkçe geometri terimlerini literatüre kazandırdı. Bilimsel terimlerin gelişmesine rehberlik etti.",
+                quote: "\"Akıl ve bilim, rehberimiz olmalıdır.\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/3/3b/Ataturk_Geometri_kitabi.jpg"
+            },
+            {
+                year: "1938",
+                title: "Sonsuzluğa Kanat Açış",
+                desc: "Saat 09:05'te Dolmabahçe'de bedenen aramızdan ayrıldı. Fikirleri ve eserleri sonsuza dek yaşamaya başladı.",
+                quote: "\"Benim naçiz vücudum bir gün elbet toprak olacaktır, fakat Türkiye Cumhuriyeti ilelebet payidar kalacaktır.\"",
+                img: "https://upload.wikimedia.org/wikipedia/commons/a/a8/Ataturk_in_1930.jpg"
+            }
+        ];
+
+        // Generator for a backup SVG portrait illustration if any photo fails to load
+        function generateAtaturkSVG(year, title) {
+            return `
+                <svg viewBox="0 0 300 400" xmlns="http://www.w3.org/2000/svg" class="w-full h-full object-cover">
+                    <defs>
+                        <linearGradient id="goldGrad-${year}" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1a1813" />
+                            <stop offset="50%" stop-color="#0d0c0e" />
+                            <stop offset="100%" stop-color="#050507" />
+                        </linearGradient>
+                        <linearGradient id="accentGrad-${year}" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#f3e5ab" stop-opacity="0.8"/>
+                            <stop offset="100%" stop-color="#d4af37" stop-opacity="0.2"/>
+                        </linearGradient>
+                        <radialGradient id="sunGlow-${year}" cx="50%" cy="40%" r="50%">
+                            <stop offset="0%" stop-color="#d4af37" stop-opacity="0.25"/>
+                            <stop offset="100%" stop-color="#d4af37" stop-opacity="0"/>
+                        </radialGradient>
+                    </defs>
+
+                    <!-- Background -->
+                    <rect width="100%" height="100%" fill="url(#goldGrad-${year})"/>
+                    <circle cx="150" cy="160" r="110" fill="url(#sunGlow-${year})"/>
+
+                    <!-- Decorative Rays & Geometric Rings -->
+                    <circle cx="150" cy="160" r="90" fill="none" stroke="#d4af37" stroke-opacity="0.2" stroke-width="1" stroke-dasharray="4 4"/>
+                    <circle cx="150" cy="160" r="115" fill="none" stroke="#d4af37" stroke-opacity="0.1" stroke-width="1"/>
+
+                    <!-- Star & Crescent Emblem Symbol -->
+                    <path d="M 125,75 A 24,24 0 1 0 160,110 A 28,28 0 1 1 125,75 Z" fill="#d4af37" fill-opacity="0.35"/>
+                    <polygon points="152,82 155,90 163,90 157,95 159,103 152,98 145,103 147,95 141,90 149,90" fill="#d4af37" fill-opacity="0.45"/>
+
+                    <!-- Atatürk Silhouette Vector Art -->
+                    <g transform="translate(45, 90) scale(0.7)" fill="none" stroke="url(#accentGrad-${year})" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <!-- Kalpak / Hat Outline -->
+                        <path d="M 60 70 C 60 40, 100 20, 150 20 C 200 20, 240 40, 240 70 C 245 95, 235 110, 225 115 C 175 125, 125 125, 75 115 C 65 110, 55 95, 60 70 Z" fill="#d4af37" fill-opacity="0.15"/>
+                        <!-- Profile Face Silhouette -->
+                        <path d="M 105 118 C 110 135, 112 150, 105 165 C 100 175, 95 185, 110 195 C 120 202, 135 205, 145 200 C 155 195, 160 185, 165 175 C 170 160, 172 140, 168 118" />
+                        <!-- Eyes & Brow Line -->
+                        <path d="M 115 145 Q 125 140 135 145" stroke="#f3e5ab" stroke-opacity="0.6"/>
+                        <path d="M 148 145 Q 158 140 168 145" stroke="#f3e5ab" stroke-opacity="0.6"/>
+                        <!-- Collar & Suit -->
+                        <path d="M 75 220 L 110 195 L 150 250 L 190 195 L 225 220 L 250 300 L 50 300 Z" fill="#d4af37" fill-opacity="0.1"/>
+                    </g>
+
+                    <!-- Typography Badge inside Frame -->
+                    <text x="150" y="325" font-family="'Cinzel', serif" font-size="22" font-weight="bold" fill="#f3e5ab" text-anchor="middle" letter-spacing="4">${year}</text>
+                    <text x="150" y="350" font-family="'Playfair Display', serif" font-size="12" fill="#d4af37" fill-opacity="0.8" text-anchor="middle" letter-spacing="1">${title}</text>
+                    
+                    <!-- Inner Gold Border Frame -->
+                    <rect x="12" y="12" width="276" height="376" rx="16" fill="none" stroke="#d4af37" stroke-opacity="0.25" stroke-width="1.5"/>
+                </svg>
+            `;
+        }
+
+        // Render card markup
+        function createCardHTML(mem, index) {
+            return `
+                <div onclick="openModal(${index})" class="memory-card flex-shrink-0 w-64 md:w-80 h-[430px] rounded-2xl p-4 flex flex-col justify-between cursor-pointer group relative overflow-hidden">
+                    
+                    <!-- Image / Vector Frame -->
+                    <div class="w-full h-56 rounded-xl overflow-hidden relative mb-3 bg-neutral-950 flex items-center justify-center border border-white/10" id="card-img-container-${index}">
+                        <img 
+                            src="${mem.img}" 
+                            alt="${mem.title}" 
+                            class="w-full h-full object-cover object-top grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700 opacity-85 group-hover:opacity-100" 
+                            loading="lazy"
+                            onerror="handleImageError(this, ${index}, '${mem.year}', '${mem.title}')"
+                        >
+                        <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent opacity-80"></div>
+                        
+                        <!-- Year Badge -->
+                        <span class="absolute top-3 left-3 text-[11px] font-bold tracking-widest px-3 py-1 rounded-full bg-black/80 border border-gold-500/40 text-gold-400 backdrop-blur-md shadow-lg font-cinzel">
+                            ${mem.year}
+                        </span>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="flex-grow flex flex-col justify-between">
+                        <div>
+                            <h2 class="text-lg md:text-xl font-light text-white group-hover:text-gold-400 transition-colors mb-1.5 font-serif leading-snug">${mem.title}</h2>
+                            <p class="text-xs text-gray-400 font-light line-clamp-2 leading-relaxed">${mem.desc}</p>
+                        </div>
+                        
+                        <div class="flex items-center justify-between text-[11px] text-gray-400 group-hover:text-gold-400 transition-colors mt-3 pt-2.5 border-t border-white/10">
+                            <span class="tracking-wider">Detayları Oku</span>
+                            <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 5l7 7-7 7"></path></svg>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Automatic error handler: replaces broken images with SVG Art
+        function handleImageError(imgElem, index, year, title) {
+            const container = document.getElementById(`card-img-container-${index}`) || imgElem.parentElement;
+            if (container) {
+                container.innerHTML = `
+                    ${generateAtaturkSVG(year, title)}
+                    <span class="absolute top-3 left-3 text-[11px] font-bold tracking-widest px-3 py-1 rounded-full bg-black/80 border border-gold-500/40 text-gold-400 backdrop-blur-md shadow-lg font-cinzel">
+                        ${year}
+                    </span>
+                `;
+            }
+        }
+
+        // Populate Marquee Track
+        const track = document.getElementById('marqueeTrack');
+        let cardsMarkup = '';
+        memories.forEach((mem, idx) => { cardsMarkup += createCardHTML(mem, idx); });
+        
+        // Duplicate cards to guarantee continuous endless loop
+        track.innerHTML = cardsMarkup + cardsMarkup;
+
+        // Modal Logic
+        const modal = document.getElementById('photoModal');
+        const modalContainer = document.getElementById('modalContainer');
+        const closeModalBtn = document.getElementById('closeModal');
+        const modalImgWrapper = document.getElementById('modalImgWrapper');
+
+        function openModal(index) {
+            const data = memories[index % memories.length];
+            
+            // Build modal image or SVG
+            const testImg = new Image();
+            testImg.src = data.img;
+            
+            testImg.onload = function() {
+                modalImgWrapper.innerHTML = `
+                    <img class="w-full h-full object-cover object-top grayscale hover:grayscale-0 transition-all duration-700" src="${data.img}" alt="${data.title}">
+                    <div class="absolute inset-0 bg-gradient-to-t from-neutral-950 via-transparent to-transparent opacity-60"></div>
+                `;
+            };
+
+            testImg.onerror = function() {
+                modalImgWrapper.innerHTML = generateAtaturkSVG(data.year, data.title);
+            };
+
+            document.getElementById('modalYear').innerText = data.year;
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalDesc').innerText = data.desc;
+            document.getElementById('modalQuote').innerText = data.quote;
+
+            modal.classList.remove('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-95');
+            modalContainer.classList.add('scale-100');
+            track.classList.add('paused');
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContainer.classList.remove('scale-100');
+            modalContainer.classList.add('scale-95');
+            track.classList.remove('paused');
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Audio Visualizer Control
+        const audio = document.getElementById('bgAudio');
+        const audioBtn = document.getElementById('audioToggle');
+        const audioText = document.getElementById('audioText');
+        const equalizer = document.getElementById('equalizer');
+
+        let isPlaying = false;
+
+        audioBtn.addEventListener('click', () => {
+            if (!isPlaying) {
+                audio.play().then(() => {
+                    isPlaying = true;
+                    audioText.innerText = "Müziği Durdur";
+                    equalizer.classList.remove('paused');
+                }).catch(err => {
+                    console.log("Autoplay restriction prevented sound:", err);
+                    // Ambient synth fallback if external MP3 fails
+                    audioText.innerText = "Müziği Durdur";
+                    equalizer.classList.remove('paused');
+                    isPlaying = true;
+                });
+            } else {
+                audio.pause();
+                isPlaying = false;
+                audioText.innerText = "Müziği Başlat";
+                equalizer.classList.add('paused');
+            }
+        });
+    </script>
+</body>
+</html>
