@@ -169,6 +169,7 @@
         <span>Atmosferi Başlat</span>
     </button>
     
+    <!-- Müzik dosyası (muzik.mp4 olarak ayarlandı) -->
     <audio id="bgAudio" loop src="muzik.mp4" autoplay></audio>
 
     <div class="modal" id="modal">
@@ -187,12 +188,11 @@
     </div>
 
     <script>
-        // KRONOLOJİK SIRAYLA 10 BÜYÜK DÖNÜM NOKTASI (1.jpg - 5.jpg eski yüklediklerin, 6.jpg - 10.jpg yeni yükleyeceklerin)
         const data = [
             {
                 year: "1915",
                 title: "Anafartalar Destanı",
-                desc: "Çanakkale'de imkansızlıklar içinde bir ulusun kaderini değiştiren, 'Ben size taarruzu değil, ölmeyi emrediyorum' diyerek tarihin akışını durduran eşsiz irade.",
+                desc: "Çanakkale'de imkansızlıklar içinde bir ulusun kaderini değiştiren, “Ben size taarruzu değil, ölmeyi emrediyorum” diyerek tarihin akışını durduran eşsiz irade.",
                 img: "1.jpg"
             },
             {
@@ -204,25 +204,25 @@
             {
                 year: "1920",
                 title: "Milletin Meclisi (TBMM)",
-                desc: "23 Nisan'da Ankara'nın bozkırında dualarla ve umutla açılan, 'Egemenlik kayıtsız şartsız milletindir' ilkesini kalplere kazıyan Gazi Meclis.",
+                desc: "23 Nisan'da Ankara'nın bozkırında dualarla ve umutla açılan, “Egemenlik kayıtsız şartsız milletindir” ilkesini kalplere kazıyan Gazi Meclis.",
                 img: "6.jpg"
             },
             {
                 year: "1921",
                 title: "Sakarya ve Başkomutanlık",
-                desc: "'Hattı müdafaa yoktur, sathı müdafaa vardır; o satıh bütün vatandır!' sözüyle vatanın her karış toprağını savunan askeri deha.",
+                desc: "“Hattı müdafaa yoktur, sathı müdafaa vardır; o satıh bütün vatandır!” sözüyle vatanın her karış toprağını savunan askeri deha.",
                 img: "7.jpg"
             },
             {
                 year: "1922",
                 title: "Büyük Taarruz ve Zafer",
-                desc: "Kocatepe'de şafak vakti başlayan ve 'Ordular, ilk hedefiniz Akdeniz'dir, ileri!' emriyle bağımsızlığı perçinleyen büyük destan.",
+                desc: "Kocatepe'de şafak vakti başlayan ve “Ordular, ilk hedefiniz Akdeniz'dir, ileri!” emriyle bağımsızlığı perçinleyen büyük destan.",
                 img: "8.jpg"
             },
             {
                 year: "1923",
                 title: "Cumhuriyetin İlanı",
-                desc: "'Türk milletinin karakterine ve adetlerine en uygun olan idare, Cumhuriyet idaresidir' diyerek en büyük eserini millete armağan ettiği o kutlu gün.",
+                desc: "“Türk milletinin karakterine ve adetlerine en uygun olan idare, Cumhuriyet idaresidir” diyerek en büyük eserini millete armağan ettiği o kutlu gün.",
                 img: "3.jpg"
             },
             {
@@ -246,7 +246,7 @@
             {
                 year: "1937",
                 title: "Geometri ve Bilim Mirası",
-                desc: "Kendi kaleminden Türkçe geometri terimlerini literatüre kazandıran, 'Hayatta en hakiki mürşit ilimdir, fendir' sözünü geleceğe miras bırakan bilge lider.",
+                desc: "Kendi kaleminden Türkçe geometri terimlerini literatüre kazandıran, “Hayatta en hakiki mürşit ilimdir, fendir” sözünü geleceğe miras bırakan bilge lider.",
                 img: "5.jpg"
             }
         ];
@@ -255,9 +255,9 @@
         
         function createCards() {
             let html = '';
-            data.forEach(item => {
+            data.forEach((item, index) => {
                 html += `
-                    <div class="card" onclick="openModal('${item.year}', '${item.title}', '${item.desc}', '${item.img}')">
+                    <div class="card" onclick="openModal(${index})">
                         <img src="${item.img}" alt="${item.title}" loading="lazy">
                         <div class="card-content">
                             <span class="card-year">${item.year}</span>
@@ -274,11 +274,12 @@
 
         const modal = document.getElementById('modal');
         
-        function openModal(year, title, desc, img) {
-            document.getElementById('modalYear').innerText = year;
-            document.getElementById('modalTitle').innerText = title;
-            document.getElementById('modalDesc').innerText = desc;
-            document.getElementById('modalImg').src = img;
+        function openModal(index) {
+            const item = data[index];
+            document.getElementById('modalYear').innerText = item.year;
+            document.getElementById('modalTitle').innerText = item.title;
+            document.getElementById('modalDesc').innerText = item.desc;
+            document.getElementById('modalImg').src = item.img;
             modal.classList.add('active');
         }
         
@@ -288,38 +289,41 @@
         
         window.onclick = function(event) {
             if (event.target == modal) closeModal();
-        }
+        };
 
         const audio = document.getElementById('bgAudio');
         const musicBtn = document.getElementById('musicBtn');
         let isPlaying = false;
 
-        musicBtn.addEventListener('click', () => {
+        function startAudio() {
+            audio.play().then(() => {
+                musicBtn.classList.add('playing');
+                musicBtn.querySelector('span').innerText = "Atmosferi Durdur";
+                isPlaying = true;
+            }).catch(() => {});
+        }
+
+        // Sayfa yüklenince otomatik çalmayı dene
+        window.addEventListener('load', startAudio);
+
+        // Tarayıcı engellerse, ekrana ilk dokunuşta otomatik başlat
+        document.body.addEventListener('click', function() {
+            if (!isPlaying) {
+                startAudio();
+            }
+        }, { once: true });
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
             if (isPlaying) {
                 audio.pause();
                 musicBtn.classList.remove('playing');
                 musicBtn.querySelector('span').innerText = "Atmosferi Başlat";
+                isPlaying = false;
             } else {
-                audio.play();
-                musicBtn.classList.add('playing');
-                musicBtn.querySelector('span').innerText = "Atmosferi Durdur";
+                startAudio();
             }
-            isPlaying = !isPlaying;
         });
-        isPlaying = !isPlaying;
-    });
-
-    // Ekrana ilk dokunuşta müziği otomatik başlatma hilesi (Tarayıcı engeline karşı)
-    document.body.addEventListener('click', function() {
-        if (!isPlaying) {
-            audio.play().catch(e => console.log("Tarayıcı otomatik çalmaya henüz izin vermedi."));
-            musicBtn.classList.add('playing');
-            musicBtn.querySelector('span').innerText = "Atmosferi Durdur";
-            isPlaying = true;
-        }
-    }, { once: true }); 
-</script>
     </script>
-    
 </body>
 </html>
