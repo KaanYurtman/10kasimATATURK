@@ -7,34 +7,24 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap');
         body, html { margin: 0; padding: 0; background-color: #0a0a0a; color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        
-        /* Sinematik gren efekti */
         .bg-grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; opacity: 0.05; background-image: url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Dissolve_Noise_Texture.png'); }
-        
         .header { text-align: center; padding: 50px 20px 20px; }
         .badge { display: inline-block; background: rgba(212, 175, 55, 0.1); color: #d4af37; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; letter-spacing: 1px; margin-bottom: 15px; border: 1px solid rgba(212, 175, 55, 0.3); }
         .header h1 { font-size: 4rem; font-weight: 300; letter-spacing: 5px; margin: 0; color: #fff; }
         .header p { font-size: 0.85rem; opacity: 0.6; letter-spacing: 2px; text-transform: uppercase; margin-top: 15px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6; }
-        
-        /* Sonsuz kayan şerit */
         .marquee-container { position: relative; width: 100%; overflow: hidden; padding: 40px 0; display: flex; align-items: center; }
         .marquee { display: flex; gap: 30px; padding: 0 50vw; animation: scroll 35s linear infinite; }
         .marquee:hover { animation-play-state: paused; }
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-100%); } }
-        
         .card { width: 320px; height: 420px; background: #121212; border: 1px solid #222; border-radius: 12px; overflow: hidden; flex-shrink: 0; cursor: pointer; transition: transform 0.4s ease, border-color 0.4s ease; position: relative; }
         .card:hover { transform: scale(1.03); border-color: #d4af37; }
         .card img { width: 100%; height: 55%; object-fit: cover; object-position: top center; filter: grayscale(100%) contrast(1.1); transition: filter 0.5s ease; }
         .card:hover img { filter: grayscale(30%) contrast(1.1); }
-        
         .card-content { padding: 25px; }
         .card-year { font-size: 0.85rem; color: #d4af37; font-weight: 600; margin-bottom: 8px; display: block; }
         .card-title { font-size: 1.3rem; margin: 0 0 12px 0; font-weight: 400; }
         .card-desc { font-size: 0.85rem; color: #888; line-height: 1.5; margin: 0; }
-        
         .instruction { text-align: center; font-size: 0.75rem; color: #666; letter-spacing: 2px; margin-top: 10px; }
-        
-        /* Müzik Butonu ve Equalizer */
         .music-btn { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(15, 15, 15, 0.85); border: 1px solid #333; padding: 12px 28px; border-radius: 30px; color: #fff; cursor: pointer; backdrop-filter: blur(10px); z-index: 50; display: flex; align-items: center; gap: 12px; font-family: 'Inter', sans-serif; font-size: 0.9rem; transition: 0.3s; }
         .music-btn:hover { border-color: #d4af37; }
         .eq { display: flex; gap: 4px; height: 16px; align-items: flex-end; }
@@ -44,8 +34,6 @@
         .playing .eq-bar:nth-child(3) { animation-delay: 0.4s; }
         .playing .eq-bar:nth-child(4) { animation-delay: 0.6s; }
         @keyframes bounce { 0% { height: 4px; } 100% { height: 16px; } }
-        
-        /* Modal (Açılır Detay Ekranı) */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 200; justify-content: center; align-items: center; opacity: 0; transition: opacity 0.4s; backdrop-filter: blur(10px); }
         .modal.active { display: flex; opacity: 1; }
         .modal-content { background: #111; border: 1px solid #222; border-radius: 12px; width: 90%; max-width: 850px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
@@ -59,35 +47,22 @@
 </head>
 <body>
     <div class="bg-grain"></div>
-    
     <div class="header">
         <span class="badge">10 KASIM ATATÜRK'Ü ANMA GÜNÜ</span>
         <h1>1881 - &infin;</h1>
         <p>Fikirleri, devrimleri ve ışığıyla yolumuzu aydınlatan Büyük Önder Mustafa Kemal Atatürk'ün aziz hatırasına...</p>
     </div>
-
     <div class="marquee-container">
-        <div class="marquee" id="marqueeTrack">
-            <!-- Kartlar JS ile oluşturulacak -->
-        </div>
+        <div class="marquee" id="marqueeTrack"></div>
     </div>
-    
     <div class="instruction">
         ✦ KARTLARA DOKUNARAK DETAYLARI İNCELEYEBİLİRSİNİZ
     </div>
-
-    <!-- Müzik Kontrolü -->
     <button class="music-btn" id="musicBtn">
-        <div class="eq">
-            <div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div>
-        </div>
+        <div class="eq"><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div><div class="eq-bar"></div></div>
         <span>Müziği Başlat</span>
     </button>
-    
-    <!-- Arka plan piyano müziği (Erik Satie - Gnossienne No.1 / Hüzünlü ve atmosferik) -->
     <audio id="bgAudio" loop src="https://upload.wikimedia.org/wikipedia/commons/8/87/Gnosienne_1.ogg"></audio>
-
-    <!-- Modal (Detay Görünümü) -->
     <div class="modal" id="modal">
         <div class="modal-content">
             <button class="modal-close" onclick="closeModal()">&times;</button>
@@ -100,65 +75,27 @@
             </div>
         </div>
     </div>
-
     <script>
-        // Wikipedia Commons'ın CDN linkleri (Asla hotlink engeline takılmaz)
+        // FOTOĞRAFLAR ARTIK DOĞRUDAN SENİN GİTHUB DEPONDAN (1.jpg, 2.jpg) ÇEKİLİYOR.
         const data = [
-            {
-                year: "1915",
-                title: "Anafartalar Destanı",
-                desc: "Çanakkale Harbi'nde dahi askeri stratejisi ve cesaretiyle dünya harp tarihini yeniden yazdı. 'Ben size taarruzu değil, ölmeyi emrediyorum.'",
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/Mustafa_Kemal_Ataturk_in_Gallipoli.jpg/600px-Mustafa_Kemal_Ataturk_in_Gallipoli.jpg"
-            },
-            {
-                year: "1919",
-                title: "Kurtuluş Meşalesi",
-                desc: "19 Mayıs'ta Bandırma Vapuru ile Samsun'a çıkarak işgal altındaki bir milletin bağımsızlık ateşini yaktı.",
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Mustafa_Kemal_Ataturk_in_Sivas_Congress.jpg/600px-Mustafa_Kemal_Ataturk_in_Sivas_Congress.jpg"
-            },
-            {
-                year: "1923",
-                title: "Cumhuriyetin İlanı",
-                desc: "Egemenliği kayıtsız şartsız millete devrederek çağdaş, laik ve modern Türkiye Cumhuriyeti'ni tüm dünyaya ilan etti.",
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mustafa_Kemal_Atat%C3%BCrk_in_1923.jpg/600px-Mustafa_Kemal_Atat%C3%BCrk_in_1923.jpg"
-            },
-            {
-                year: "1928",
-                title: "Harf ve İlim Seferberliği",
-                desc: "Kara tahta başında millete yeni Türk harflerini bizzat öğreterek bilim, eğitim ve okuma hamlesini başlattı.",
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Atat%C3%BCrk_and_alphabet.jpg/600px-Atat%C3%BCrk_and_alphabet.jpg"
-            },
-            {
-                year: "1937",
-                title: "Geometri ve Gelecek",
-                desc: "Kendi kaleminden Türkçe geometri terimlerini literatüre kazandırdı. Bilimsel terimlerin gelişmesine öncülük etti.",
-                img: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b3/Gazi_Mustafa_Kemal_Atat%C3%BCrk_1930s.jpg/600px-Gazi_Mustafa_Kemal_Atat%C3%BCrk_1930s.jpg"
-            }
+            { year: "1915", title: "Anafartalar Destanı", desc: "Çanakkale Harbi'nde dahi askeri stratejisi ve cesaretiyle dünya harp tarihini yeniden yazdı.", img: "1.jpg" },
+            { year: "1919", title: "Kurtuluş Meşalesi", desc: "19 Mayıs'ta Bandırma Vapuru ile Samsun'a çıkarak işgal altındaki bir milletin bağımsızlık ateşini yaktı.", img: "2.jpg" },
+            { year: "1923", title: "Cumhuriyetin İlanı", desc: "Egemenliği kayıtsız şartsız millete devrederek çağdaş, laik ve modern Türkiye Cumhuriyeti'ni ilan etti.", img: "3.jpg" },
+            { year: "1928", title: "Harf ve İlim Seferberliği", desc: "Kara tahta başında millete yeni Türk harflerini bizzat öğreterek bilim ve okuma hamlesini başlattı.", img: "4.jpg" },
+            { year: "1937", title: "Geometri ve Gelecek", desc: "Kendi kaleminden Türkçe geometri terimlerini literatüre kazandırdı.", img: "5.jpg" }
         ];
-
         const marqueeTrack = document.getElementById('marqueeTrack');
-        
         function createCards() {
             let html = '';
             data.forEach(item => {
-                html += `
-                    <div class="card" onclick="openModal('${item.year}', '${item.title}', '${item.desc}', '${item.img}')">
-                        <img src="${item.img}" alt="${item.title}" loading="lazy">
-                        <div class="card-content">
-                            <span class="card-year">${item.year}</span>
-                            <h3 class="card-title">${item.title}</h3>
-                            <p class="card-desc">${item.desc}</p>
-                        </div>
-                    </div>
-                `;
+                html += `<div class="card" onclick="openModal('${item.year}', '${item.title}', '${item.desc}', '${item.img}')">
+                            <img src="${item.img}" alt="${item.title}" loading="lazy">
+                            <div class="card-content"><span class="card-year">${item.year}</span><h3 class="card-title">${item.title}</h3><p class="card-desc">${item.desc}</p></div>
+                        </div>`;
             });
             return html;
         }
-
-        // Sonsuz döngü için kartları 3 kez kopyalıyoruz
         marqueeTrack.innerHTML = createCards() + createCards() + createCards();
-
-        // Modal İşlevleri
         const modal = document.getElementById('modal');
         function openModal(year, title, desc, img) {
             document.getElementById('modalYear').innerText = year;
@@ -167,28 +104,14 @@
             document.getElementById('modalImg').src = img;
             modal.classList.add('active');
         }
-        function closeModal() {
-            modal.classList.remove('active');
-        }
-        window.onclick = function(event) {
-            if (event.target == modal) closeModal();
-        }
-
-        // Ses Kontrolü
+        function closeModal() { modal.classList.remove('active'); }
+        window.onclick = function(event) { if (event.target == modal) closeModal(); }
         const audio = document.getElementById('bgAudio');
         const musicBtn = document.getElementById('musicBtn');
         let isPlaying = false;
-
         musicBtn.addEventListener('click', () => {
-            if (isPlaying) {
-                audio.pause();
-                musicBtn.classList.remove('playing');
-                musicBtn.querySelector('span').innerText = "Müziği Başlat";
-            } else {
-                audio.play();
-                musicBtn.classList.add('playing');
-                musicBtn.querySelector('span').innerText = "Müziği Durdur";
-            }
+            if (isPlaying) { audio.pause(); musicBtn.classList.remove('playing'); musicBtn.querySelector('span').innerText = "Müziği Başlat"; } 
+            else { audio.play(); musicBtn.classList.add('playing'); musicBtn.querySelector('span').innerText = "Müziği Durdur"; }
             isPlaying = !isPlaying;
         });
     </script>
