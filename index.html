@@ -169,7 +169,7 @@
         <span>Atmosferi Başlat</span>
     </button>
     
-    <audio id="bgAudio" loop src="https://upload.wikimedia.org/wikipedia/commons/8/87/Gnosienne_1.ogg"></audio>
+    <audio id="bgAudio" loop src="muzik.mp4" autoplay></audio>
 
     <div class="modal" id="modal">
         <div class="modal-content">
@@ -306,6 +306,20 @@
             }
             isPlaying = !isPlaying;
         });
+        isPlaying = !isPlaying;
+    });
+
+    // Ekrana ilk dokunuşta müziği otomatik başlatma hilesi (Tarayıcı engeline karşı)
+    document.body.addEventListener('click', function() {
+        if (!isPlaying) {
+            audio.play().catch(e => console.log("Tarayıcı otomatik çalmaya henüz izin vermedi."));
+            musicBtn.classList.add('playing');
+            musicBtn.querySelector('span').innerText = "Atmosferi Durdur";
+            isPlaying = true;
+        }
+    }, { once: true }); 
+</script>
     </script>
+    
 </body>
 </html>
